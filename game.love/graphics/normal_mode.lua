@@ -1,8 +1,9 @@
-player = { x = 200, y = 200, speed = 150, img = nil }
+player = { x = 200, y = 200, speed = 150, angle = math.rad(0), img = nil }
 canShoot = true
 canShootTimerMax = 0.8
 canShootTimer = canShootTimerMax
 bulletImg = nil
+angleAdjustment = -90
 
 bullets = {}
 function love.draw(dt)
@@ -19,26 +20,34 @@ if love.keyboard.isDown('escape') then
 		love.event.push('quit')
 	end
 
-	if love.keyboard.isDown('left','a') then 
+	if love.keyboard.isDown('a') then 
 		if player.x > 0 then 
-		player.rotation = math.deg(player.x - player.speed*dt)
-	end
-	elseif love.keyboard.isDown('right','d') then
+			player.angle = math.rad(math.deg(player.angle) - (50 * dt))
+		end
+	elseif love.keyboard.isDown('d') then
 		if player.x < (love.graphics.getWidth() - player.img:getWidth()) then
-		player.rotation = math.deg(player.x + player.speed*dt)
-	end	
+			player.angle = math.rad(math.deg(player.angle) + (50 * dt))
+		end	
     elseif love.keyboard.isDown('down','w') then 
 		if player.y > 0 then 
-		player.y = player.y - (player.speed*dt)
-	end
+			local velocityX = math.cos(player.angle) * (player.speed * dt);
+			local velocityY = math.sin(player.angle) * (player.speed * dt)
+			player.rotation = angle;
+			player.x = player.x + velocityX;
+			player.y = player.y + velocityY;	
+		end
     elseif love.keyboard.isDown('up','s') then
 		if player.y < (love.graphics.getHeight() - player.img:getHeight()) then
-		player.y = player.y + (player.speed*dt)
+			local velocityX = math.cos(player.angle) * (player.speed * dt);
+			local velocityY = math.sin(player.angle) * (player.speed * dt)
+			player.rotation = angle;
+			player.x = player.x + velocityX;
+			player.y = player.y + velocityY;
 	end
     elseif love.keyboard.isDown('space') and canShoot then
-        newBullet = { x = player.x + (player.img:getWidth()/2), y = player.y, img = bulletImg }	
+        newBullet = { x = player.x, y = player.y, img = bulletImg }	
 	table.insert(bullets, newBullet)
-	canShoot = true
+	canShoot = false
 	CanShootTimer = canShootTimerMax
 	end
 	canShootTimer = canShootTimer - (1 * dt) 
@@ -57,8 +66,8 @@ end
 
 
 function love.draw(dt)
-	love.graphics.draw(player.img, player.x, player.y, player.rotation, 1, 1, player.img:getWidth()/2, player.img:getHeight()/2)
-	
+	love.graphics.draw(player.img, player.x, player.y, player.angle + math.rad(90), 1, 1, player.img:getWidth()/2, player.img:getHeight()/2)
+	love.graphics.print(math.deg(player.angle), 0, 0)
 for i, bullet in ipairs(bullets) do
 	love.graphics.draw(bullet.img, bullet.x, bullet.y)
 end
