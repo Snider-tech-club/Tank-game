@@ -1,0 +1,1 @@
+dofile("normal_mode.lua")

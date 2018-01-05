@@ -11,10 +11,11 @@ keys is table
 ]]--
 function tank:new (params)
 	params = params
-	setmetatable(params, self)
+	local types = {{damage: 25, health: 50, speed: 25, bounce: 8, reload: 5, imgPath: 'assets/tank sprite.png', bulletPath: 'assets/bullet.png'}
+	setmetatable(types[params.type +1], self)
     self.__index = self
-    self.speed = 150
-    self.img = love.graphics.newImage('assets/tank sprite.png')
+    self.keys = params.keys
+    self.img = love.graphics.newImage(self.imgPath)
     return params
 end
 function tank:update(dt)

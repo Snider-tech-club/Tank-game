@@ -7,7 +7,7 @@ angleAdjustment = -90
 
 bullets = {}
 function love.draw(dt)
-    
+
 end
 
 function love.load(arg)
@@ -20,21 +20,21 @@ if love.keyboard.isDown('escape') then
 		love.event.push('quit')
 	end
 
-	if love.keyboard.isDown('a') then 
-		if player.x > 0 then 
+	if love.keyboard.isDown('a') then
+		if player.x > 0 then
 			player.angle = math.rad(math.deg(player.angle) - (50 * dt))
 		end
 	elseif love.keyboard.isDown('d') then
 		if player.x < (love.graphics.getWidth() - player.img:getWidth()) then
 			player.angle = math.rad(math.deg(player.angle) + (50 * dt))
-		end	
-    elseif love.keyboard.isDown('down','w') then 
-		if player.y > 0 then 
+		end
+    elseif love.keyboard.isDown('down','w') then
+		if player.y > 0 then
 			local velocityX = math.cos(player.angle) * (player.speed * dt);
 			local velocityY = math.sin(player.angle) * (player.speed * dt)
 			player.rotation = angle;
 			player.x = player.x + velocityX;
-			player.y = player.y + velocityY;	
+			player.y = player.y + velocityY;
 		end
     elseif love.keyboard.isDown('up','s') then
 		if player.y < (love.graphics.getHeight() - player.img:getHeight()) then
@@ -45,19 +45,20 @@ if love.keyboard.isDown('escape') then
 			player.y = player.y + velocityY;
 	end
     elseif love.keyboard.isDown('space') and canShoot then
-        newBullet = { x = player.x, y = player.y, img = bulletImg }	
-	table.insert(bullets, newBullet)
-	canShoot = false
-	CanShootTimer = canShootTimerMax
+        newBullet = { x = player.x, y = player.y, img = bulletImg }
+		table.insert(bullets, newBullet)
+		canShoot = false
+		canShootTimer = canShootTimerMax
 	end
-	canShootTimer = canShootTimer - (1 * dt) 
-if canShootTimer < 0 then
-	canShoot = true
-end
+	canShootTimer = canShootTimer - (1 * dt)
+	if canShootTimer <= 0 then
+		canShoot = true
+		canShootTimer = 0
+	end
 for i, bullet in ipairs(bullets) do
 	bullet.y = bullet.y - (250 * dt)
 
-	if bullet.y < 0 then 
+	if bullet.y < 0 then
 		table.remove(bullets, i)
 	end
 end

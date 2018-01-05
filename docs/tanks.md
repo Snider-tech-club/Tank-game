@@ -1,5 +1,5 @@
 # Tanks design
-
+{damage: , health: , speed: , bounce: , reload: , imgPath: , bulletPath: , keys: {}}
 ## Normal tank design
 * Somewhat fast reload time
 * fast bullet
