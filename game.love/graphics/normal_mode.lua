@@ -6,9 +6,6 @@ bulletImg = nil
 angleAdjustment = -90
 
 bullets = {}
-function love.draw(dt)
-
-end
 
 function love.load(arg)
 player.img = love.graphics.newImage('assets/tank sprite.png')

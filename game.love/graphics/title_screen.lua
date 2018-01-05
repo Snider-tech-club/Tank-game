@@ -1,1 +1,1 @@
-dofile("normal_mode.lua")
+dofile("graphics/normal_mode.lua")
