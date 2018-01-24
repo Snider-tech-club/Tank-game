@@ -1,77 +1,25 @@
-player = { x = 200, y = 200, speed = 150, angle = math.rad(0), img = nil }
-canShoot = true
-canShootTimerMax = 0.8
-canShootTimer = canShootTimerMax
-bulletImg = nil
-angleAdjustment = -90
-
-bullets = {}
-function love.draw(dt)
-    
-end
-
+tanks = {}
+require("tanks/tankGenerator")
 function love.load(arg)
-player.img = love.graphics.newImage('assets/tank sprite.png')
-bulletImg = love.graphics.newImage('assets/bullet.png')
+	params = {}
+	params.keys = {up = "w", down = "s", left = "a", right = "d", attack = "space"}
+	params.type = 0
+	params.x = 300
+	params.y = 300
+	table.insert(tanks, tank:new(params))
 end
 
 function love.update(dt)
-if love.keyboard.isDown('escape') then
-		love.event.push('quit')
+	for i, a_tank in ipairs(tanks) do
+		a_tank:update(dt)
 	end
-
-	if love.keyboard.isDown('a') then 
-		if player.x > 0 then 
-			player.angle = math.rad(math.deg(player.angle) - (85 * dt))
-		end
-	elseif love.keyboard.isDown('d') then
-		if player.x < (love.graphics.getWidth() - player.img:getWidth()) then
-			player.angle = math.rad(math.deg(player.angle) + (85 * dt))
-		end	
-    elseif love.keyboard.isDown('down','w') then 
-		if player.y > 0 then 
-			local velocityX = math.cos(player.angle) * (player.speed * dt);
-			local velocityY = math.sin(player.angle) * (player.speed * dt)
-			player.rotation = angle;
-			player.x = player.x + velocityX;
-			player.y = player.y + velocityY;	
-		end
-    elseif love.keyboard.isDown('up','s') then
-		if player.y < (love.graphics.getHeight() - player.img:getHeight()) then
-			local velocityX = math.cos(player.angle) * (player.speed * dt);
-			local velocityY = math.sin(player.angle) * (player.speed * dt)
-			player.rotation = angle;
-			player.x = player.x - velocityX;
-			player.y = player.y - velocityY;
-	end
-    elseif love.keyboard.isDown('space') and canShoot then
-    	local velocityX = math.cos(player.angle) * (player.speed * dt);
-		local velocityY = math.sin(player.angle) * (player.speed * dt)
-        newBullet = { speed = 150, angle = player.angle, x = player.x , y = player.y, img = bulletImg }	
-	table.insert(bullets, newBullet)
-	canShoot = false
-	CanShootTimer = canShootTimerMax
-	end
-	canShootTimer = canShootTimer - (1 * dt) 
-if canShootTimer < 0 then
-	canShoot = true
-end
-
-for i, bullet in ipairs(bullets) do
-	bullet.x = bullet.x + math.cos(bullet.angle) * (player.speed * dt)
-	bullet.y = bullet.y + math.sin(bullet.angle) * (player.speed * dt)
-	if bullet.y < 0 then 
-		table.remove(bullets, i)
-	end
-end
 end
 
 
 
 function love.draw(dt)
-	love.graphics.draw(player.img, player.x, player.y, player.angle + math.rad(90), 1, 1, player.img:getWidth()/2, player.img:getHeight()/2)
-for i, bullet in ipairs(bullets) do
-	love.graphics.draw(bullet.img, bullet.x, bullet.y)
-end
+	for i, tank in ipairs(tanks) do
+		tank:draw(dt)
+	end
 end
 
