@@ -46,17 +46,15 @@ if love.keyboard.isDown('escape') then
 		if self.y > 0 then
 			local velocityX = math.cos(self.angle) * (self.speed * dt);
 			local velocityY = math.sin(self.angle) * (self.speed * dt)
-			self.rotation = angle;
-			self.x = self.x + velocityX;
-			self.y = self.y + velocityY;
+			self.x = self.x - velocityX;
+			self.y = self.y - velocityY;
 		end
     elseif love.keyboard.isDown(self.keys.up) then
 		if self.y < (love.graphics.getHeight() - self.img:getHeight()) then
 			local velocityX = math.cos(self.angle) * (self.speed * dt);
 			local velocityY = math.sin(self.angle) * (self.speed * dt)
-			self.rotation = angle;
-			self.x = self.x - velocityX;
-			self.y = self.y - velocityY;
+			self.x = self.x + velocityX;
+			self.y = self.y + velocityY;
 	end
     elseif love.keyboard.isDown(self.keys.attack) and canShoot then
     	local velocityX = math.cos(self.angle) * (self.speed * dt);
