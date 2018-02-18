@@ -1,1 +1,1 @@
-dofile("graphics/title_screen.lua")
+dofile(love.filesystem.getSource() .. "/graphics/title_screen.lua")

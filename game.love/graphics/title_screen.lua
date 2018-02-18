@@ -1,1 +1,1 @@
-dofile("graphics/normal_mode.lua")
+dofile(love.filesystem.getSource() .. "/graphics/normal_mode.lua")
