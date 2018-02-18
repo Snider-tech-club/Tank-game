@@ -9,6 +9,7 @@ Keys: set  keys for movement
 keys is table
 }
 ]]--
+require('graphics/math')
 tank = {}
 tank.__index = tank
 function tank:new (params, HC)
@@ -20,8 +21,8 @@ function tank:new (params, HC)
     self.img = love.graphics.newImage(self.imgPath)
     self.bullets = {}
     self.canShoot = true
-	self.canShootTimerMax = 1.0
-	self.canShootTimer = 1.0
+	self.canShootTimerMax = .6
+	self.canShootTimer = .6
 	self.bulletImg = love.graphics.newImage(self.bulletPath)
 	self.angleAdjustment = -90
 	self.angle = 0
@@ -45,17 +46,15 @@ if love.keyboard.isDown('escape') then
 		end
     elseif love.keyboard.isDown(self.keys.down) then
 		if self.y > 0 then
-			local velocityX = math.cos(self.angle) * (self.speed * dt)
-			local velocityY = math.sin(self.angle) * (self.speed * dt)
-			self.x = self.x - velocityX
-			self.y = self.y - velocityY
+			local velocityChanges = movement(self.x, self.y, self.angle, self.speed, dt)
+			self.x = self.x - velocityChanges[1]
+			self.y = self.y - velocityChanges[2]
 		end
     elseif love.keyboard.isDown(self.keys.up) then
 		if self.y < (love.graphics.getHeight() - self.img:getHeight()) then
-			local velocityX = math.cos(self.angle) * (self.speed * dt)
-			local velocityY = math.sin(self.angle) * (self.speed * dt)
-			self.x = self.x + velocityX
-			self.y = self.y + velocityY
+			local velocityChanges = movement(self.x, self.y, self.angle, self.speed, dt)
+			self.x = self.x + velocityChanges[1]
+			self.y = self.y + velocityChanges[2]
 		end
 	end
 		self.canShootTimer = self.canShootTimer - (1 * dt)
