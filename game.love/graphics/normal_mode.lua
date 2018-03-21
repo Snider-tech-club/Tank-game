@@ -8,11 +8,29 @@ function love.load(arg)
 	params.x = 300
 	params.y = 300
 	table.insert(tanks, tank:new(params,HC))
+	params = {}
+	params.keys = {up = "up", down = "down", left = "left", right = "right", attack = "x"}
+	params.type = 0
+	params.x = 400
+	params.y = 400
+	table.insert(tanks, tank:new(params,HC))
 end
 
 function love.update(dt)
 	for i, a_tank in ipairs(tanks) do
-		a_tank:update(dt)
+		a_tank:update(dt,HC)
+		for shape, delta in pairs(HC.collisions(a_tank.shape)) do
+			for b, colliding_tanks in ipairs(tanks) do
+		    	if  i ~= b then
+		    		print("not tank")
+		    		for i, bullet in ipairs(colliding_tanks.bullets) do
+		    			if (bullet.shape == shape) then
+		    				print("Tank Destoryed")
+		    			end
+        			end
+        		end
+    		end
+    	end
 	end
 end
 

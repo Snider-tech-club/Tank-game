@@ -26,35 +26,31 @@ function tank:new (params, HC)
 	self.bulletImg = love.graphics.newImage(self.bulletPath)
 	self.angleAdjustment = -90
 	self.angle = 0
-	self.x = params.x
-	self.y = params.x
---	self.shape = HC.rectangle(self.x,self.y, 18, 27)
+	self.shape = HC.rectangle(params.x-18,params.y -27, 18, 27)
     return self
 end
-function tank:update(dt)
+function tank:update(dt,HC)
 if love.keyboard.isDown('escape') then
 		love.event.push('quit')
 	end
-
-	if love.keyboard.isDown(self.keys.left) then
-		if self.x > 0 then
-			self.angle = math.rad(math.deg(self.angle) - (85 * dt))
-		end
-	elseif love.keyboard.isDown(self.keys.right) then
-		if self.x < (love.graphics.getWidth() - self.img:getWidth()) then
-			self.angle = math.rad(math.deg(self.angle) + (85 * dt))
-		end
-    elseif love.keyboard.isDown(self.keys.down) then
+	self.x, self.y = self.shape:center()
+	    if love.keyboard.isDown(self.keys.down) then
 		if self.y > 0 then
-			local velocityChanges = movement(self.x, self.y, self.angle, self.speed, dt)
-			self.x = self.x - velocityChanges[1]
-			self.y = self.y - velocityChanges[2]
+			local velocityChanges = movement(self.x, self.y, self.shape:rotation(), self.speed, dt)
+			self.shape:move(-1* velocityChanges[1],-1* velocityChanges[2])
 		end
     elseif love.keyboard.isDown(self.keys.up) then
 		if self.y < (love.graphics.getHeight() - self.img:getHeight()) then
-			local velocityChanges = movement(self.x, self.y, self.angle, self.speed, dt)
-			self.x = self.x + velocityChanges[1]
-			self.y = self.y + velocityChanges[2]
+			local velocityChanges = movement(self.x, self.y, self.shape:rotation(), self.speed, dt)
+			self.shape:move(velocityChanges[1], velocityChanges[2])
+		end
+	elseif love.keyboard.isDown(self.keys.left) then
+		if self.x > 0 then
+			self.shape:rotate(-1 *math.rad(85 * dt))
+		end
+	elseif love.keyboard.isDown(self.keys.right) then
+		if self.x < (love.graphics.getWidth() - self.img:getWidth()) then
+			self.shape:rotate(math.rad(85 * dt))
 		end
 	end
 		self.canShootTimer = self.canShootTimer - (1 * dt)
@@ -71,18 +67,18 @@ if love.keyboard.isDown('escape') then
 		end
 	end
     if love.keyboard.isDown(self.keys.attack) and self.canShoot  then
-    	local velocityX = math.cos(self.angle) * (self.speed * dt)
-		local velocityY = math.sin(self.angle) * (self.speed * dt)
-        local newBullet = { speed = 150, angle = self.angle, x = self.x -2, y = self.y -2, img = self.bulletImg, speed = self.speed +20 }
+
+        local newBullet = { speed = 150, angle = self.shape:rotation(), x = self.x  , y = self.y, img = self.bulletImg, speed = self.speed +20 }
+        newBullet.shape = HC.circle(newBullet.x, newBullet.y, 5)
 		table.insert(self.bullets, newBullet)
 		self.canShoot = false
 		self.CanShootTimer = self.canShootTimerMax
 
 	end
---	self.shape:moveTo(self.x, self.y)
 end
 	function tank:draw( dt )
-		love.graphics.draw(self.img, self.x, self.y, self.angle + math.rad(90), 1, 1, self.img:getWidth()/2, self.img:getHeight()/2)
+		self.x, self.y = self.shape:center()
+		love.graphics.draw(self.img, self.x, self.y, self.shape:rotation() + math.rad(90), 1, 1, self.img:getWidth()/2, self.img:getHeight()/2)
 	for i, bullet in ipairs(self.bullets) do
 		love.graphics.draw(bullet.img, bullet.x, bullet.y)
 	end
