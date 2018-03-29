@@ -24,7 +24,8 @@ function love.update(dt)
 		    	if  i ~= b then
 		    		print(colliding_tank.bullets[1])
 		    		for i, bullet in ipairs(colliding_tanks.bullets) do
-		    			if (bullet.shape == shape) then
+		    			local collides, dx, dy = bullet.shape:collidesWith(a_tank.shape)
+					if collides then
 		    				print("Tank Destoryed")
 		    			end
         			end
