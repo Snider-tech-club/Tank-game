@@ -20,9 +20,9 @@ function love.update(dt)
 	for i, a_tank in ipairs(tanks) do
 		a_tank:update(dt,HC)
 		for shape, delta in pairs(HC.collisions(a_tank.shape)) do
-			for b, colliding_tanks in ipairs(tanks) do
+			for b, colliding_tank in ipairs(tanks) do
 		    	if  i ~= b then
-		    		print("not tank")
+		    		print(colliding_tank.bullets[1])
 		    		for i, bullet in ipairs(colliding_tanks.bullets) do
 		    			if (bullet.shape == shape) then
 		    				print("Tank Destoryed")
