@@ -14,7 +14,7 @@ tank = {}
 tank.__index = tank
 function tank:new (params, HC)
 	local keys = params.keys
-	normal = {damage = 25, health = 50, speed = 50, bounce = 8, reload = 5, imgPath = 'assets/tank sprite.png', bulletPath = 'assets/bullet.png', }
+	normal = {damage = 25, health = 50, speed = 50, bounce = 8, reload = 5, imgPath = 'assets/tank sprite.png', bulletPath = 'assets/bullet.png', dead = false}
 	self = setmetatable(normal, self)
     self.__index = self
     self.keys = keys
@@ -68,7 +68,7 @@ if love.keyboard.isDown('escape') then
 	end
     if love.keyboard.isDown(self.keys.attack) and self.canShoot  then
 
-        local newBullet = { speed = 150, angle = self.shape:rotation(), x = self.x  , y = self.y, img = self.bulletImg, speed = self.speed +20 }
+        local newBullet = { speed = 150, angle = self.shape:rotation(), x = self.x  , y = self.y, img = self.bulletImg, speed = self.speed +20, damage = self.damage }
         newBullet.shape = HC.circle(newBullet.x, newBullet.y, 5)
         newBullet.shape:setRotation(newBullet.angle)
 		table.insert(self.bullets, newBullet)
@@ -84,4 +84,15 @@ function tank:draw( dt )
 		bullet.x, bullet.y = bullet.shape:center()
 		love.graphics.draw(bullet.img, bullet.x, bullet.y)
 	end
+end
+function tank:takeDamage(amount)
+	print(self)
+	self.health = self.health - amount
+	if self.health <= 0 then
+		self:destory()
+	end
+end
+function tank:destory()
+	print("destoried")
+	self.dead = true
 end
