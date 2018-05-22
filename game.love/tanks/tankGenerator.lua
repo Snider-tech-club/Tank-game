@@ -14,7 +14,7 @@ tank = {}
 tank.__index = tank
 function tank:new (params, HC)
 	local keys = params.keys
-	normal = {damage = 25, health = 50, speed = 50, bounce = 8, reload = 5, imgPath = 'assets/tank sprite.png', bulletPath = 'assets/bullet.png', dead = false}
+	normal = {damage = 5, health = 50, maxHealth = 50, speed = 50, bounce = 8, reload = 5, imgPath = 'assets/tank sprite.png', bulletPath = 'assets/bullet.png', dead = false}
 	self = setmetatable(normal, self)
     self.__index = self
     self.keys = keys
@@ -27,6 +27,7 @@ function tank:new (params, HC)
 	self.angleAdjustment = -90
 	self.angle = 0
 	self.shape = HC.rectangle(params.x-18,params.y -27, 18, 27)
+	self.order = params.order
     return self
 end
 function tank:update(dt,HC)
@@ -80,19 +81,29 @@ end
 function tank:draw( dt )
 		self.x, self.y = self.shape:center()
 		love.graphics.draw(self.img, self.x, self.y, self.shape:rotation() + math.rad(90), 1, 1, self.img:getWidth()/2, self.img:getHeight()/2)
+    	love.graphics.setColor(1, 0, 0)
+    	percentage = self.health / self.maxHealth
+    	if(self.order == 1) then
+    		x = 0
+    		y = 0
+    	elseif(self.order==2)then
+    		x = 500
+    		y = 0
+		end
+    		love.graphics.rectangle("fill", x, y, 120 * percentage, 20 )
+    	love.graphics.reset( )
 	for i, bullet in ipairs(self.bullets) do
 		bullet.x, bullet.y = bullet.shape:center()
 		love.graphics.draw(bullet.img, bullet.x, bullet.y)
 	end
 end
 function tank:takeDamage(amount)
-	print(self)
+
 	self.health = self.health - amount
 	if self.health <= 0 then
 		self:destory()
 	end
 end
 function tank:destory()
-	print("destoried")
 	self.dead = true
 end
